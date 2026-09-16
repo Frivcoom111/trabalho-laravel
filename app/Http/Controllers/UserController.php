@@ -17,14 +17,31 @@ class UserController extends Controller
     ]);
    }
 
-   public function show(int $id)
+   public function show($id)
    {
-    $user = new User();
-    $user = $user->show_user($id);
+    $user = User::find($id);
   
     return view('user.show',[
         'user' => $user]);
 
+   }
+
+   public function register()
+   {
+       return view('user.create');
+   }
+
+   public function store(Request $request)
+   {
+    $input = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8',
+    ]);
+
+    User::create($input);
+    return redirect()->route('admin.users.index')->with('success', 'Usuário criado com sucesso!');
+    
    }
    
 

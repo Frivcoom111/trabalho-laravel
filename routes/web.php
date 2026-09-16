@@ -8,5 +8,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin/users',[UserController::class, 'index']);
+Route::get('register', [UserController::class, 'register']);
+
+Route::get('/admin/users',[UserController::class, 'index'])->name('admin.users.index');
 Route::get('admin/user/{user}' ,[UserController::class, 'show']);
+Route::post('store', [UserController::class, 'store'])->name('users.store');
