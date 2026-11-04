@@ -69,3 +69,13 @@ test('logout encerra a sessão e redireciona ao login', function () {
 
     $this->assertGuest();
 });
+
+test('home carrega para usuário logado e mostra o botão Sair', function () {
+    $user = User::factory()->create();
+
+    $this->withoutVite()->actingAs($user)
+        ->get('/')
+        ->assertOk()
+        ->assertSee('Sair')
+        ->assertSee(route('logout'));
+});
