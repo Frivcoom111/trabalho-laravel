@@ -66,3 +66,17 @@ test('seeder cria o admin só em ambiente local', function () {
     $admin = User::where('email', 'admin@example.com')->first();
     expect($admin->profile->type)->toBe('admin');
 });
+
+test('admin abre a edição de usuário e salva linguagens', function () {
+    $admin = criarAdmin();
+
+    $this->withoutVite()->actingAs($admin)
+        ->get(route('admin.user.edit', $admin->id))
+        ->assertOk();
+
+    $this->actingAs($admin)
+        ->put(route('admin.user.updateLanguages', $admin->id), ['languages' => ['PHP']])
+        ->assertRedirect(route('admin.users.index'));
+
+    $this->assertDatabaseHas('user_languages', ['user_id' => $admin->id, 'language' => 'PHP']);
+});
